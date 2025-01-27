@@ -4,7 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local ModuleScriptMonitor = require(ReplicatedStorage.AvantRuntime.State.Discovery.ModuleScriptMonitor)
-local Test = require(ReplicatedStorage.AvantRuntime.State.Test)
+local Test = require(ReplicatedStorage.AvantRuntime.State.Test.Test)
 
 return function()
     describe("A ModuleScriptMonitor", function()

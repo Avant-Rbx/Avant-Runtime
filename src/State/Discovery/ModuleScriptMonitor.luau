@@ -1,7 +1,7 @@
 --Monitors a ModuleScript and updates the test state.
 --!strict
 
-local Test = require(script.Parent.Parent:WaitForChild("Test"))
+local Test = require(script.Parent.Parent:WaitForChild("Test"):WaitForChild("Test"))
 
 local ModuleScriptMonitor = {}
 ModuleScriptMonitor.__index = ModuleScriptMonitor

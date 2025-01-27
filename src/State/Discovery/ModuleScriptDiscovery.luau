@@ -2,7 +2,7 @@
 --!strict
 
 local ModuleScriptMonitor = require(script.Parent:WaitForChild("ModuleScriptMonitor"))
-local Test = require(script.Parent.Parent:WaitForChild("Test"))
+local Test = require(script.Parent.Parent:WaitForChild("Test"):WaitForChild("Test"))
 
 local ModuleScriptDiscovery = {}
 ModuleScriptDiscovery.__index = ModuleScriptDiscovery
