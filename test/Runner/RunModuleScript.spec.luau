@@ -16,7 +16,7 @@ return function()
 
         it("should not with no ModuleScript.", function()
             RunModuleScript(TestTest)
-            expect(TestTest.State).to.equal("NOTRUN")
+            expect(TestTest.State).to.equal("NOT_RUN")
         end)
 
         it("should run ModuleScripts with TestEZ.", function()

@@ -38,11 +38,11 @@ end
 Prepares the child tests to be run.
 --]]
 function TestRunContext.PrepareChildTests(self: TestRunContext): ()
-    --Increase the order for all tests and set them as NOTRUN.
+    --Increase the order for all tests and set them as NOT_RUN.
     --Increasing the order is done to allow for easy insertion of new tests.
     for _, ChildTest in self.UnusedChildTests do
         ChildTest.SortIndex += 1000000
-        ChildTest.State = "NOTRUN"
+        ChildTest.State = "NOT_RUN"
         ChildTest:ClearOutput()
     end
 end

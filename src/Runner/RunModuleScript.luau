@@ -6,10 +6,10 @@ local ModuleSandbox = require(script.Parent.Parent:WaitForChild("State"):WaitFor
 local RunWithTestEZ = require(script.Parent:WaitForChild("RunWithTestEZ"))
 
 return function(TestInstance: Test.Test): ()
-    --Set the test as NOTRUN if there is no ModuleScript.
+    --Set the test as NOT_RUN if there is no ModuleScript.
     local ModuleScript = TestInstance.ModuleScript
     if not ModuleScript then
-        TestInstance.State = "NOTRUN"
+        TestInstance.State = "NOT_RUN"
         return
     end
 

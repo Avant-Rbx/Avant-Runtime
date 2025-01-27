@@ -4,12 +4,13 @@
 local Test = {}
 Test.__index = Test
 
-export type TestState = "NOTRUN" | "INPROGRESS" | "PASSED" | "FAILED" | "SKIPPED"
+export type TestState = "NOT_RUN" | "INPROGRESS" | "PASSED" | "FAILED" | "SKIPPED"
 export type TestContentsState = "NORMAL" | "UPDATED" | "MISSING"
 export type OutputEntry = {
     Time: number,
     MessageType: Enum.MessageType,
     Contents: {any},
+    ContentsSize: number,
 }
 export type Test = {
     Name: string,
@@ -30,7 +31,7 @@ function Test.new(): Test
     return setmetatable({
         Name = "Unnamed",
         SortIndex = 1,
-        State = "NOTRUN" :: TestState,
+        State = "NOT_RUN" :: TestState,
         ContentsState = "NORMAL" :: TestContentsState,
         Output = {},
         ChildTests = {},
@@ -53,7 +54,8 @@ function Test.AddOutput(self: Test, MessageType: Enum.MessageType, ...: any): ()
     table.insert(self.Output, {
         Time = tick(),
         MessageType = MessageType,
-        Contents = table.pack(...), 
+        Contents = table.pack(...),
+        ContentsSize = select("#", ...), --Handles nil being part of ...
     } :: OutputEntry)
 end
 

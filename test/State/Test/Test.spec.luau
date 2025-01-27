@@ -38,6 +38,7 @@ return function()
             expect(#TestTest.Output[1].Contents).to.equal(2)
             expect(TestTest.Output[1].Contents[1]).to.equal("Message1")
             expect(TestTest.Output[1].Contents[2]).to.equal("Message2")
+            expect(TestTest.Output[1].ContentsSize).to.equal(2)
         end)
 
         it("should add output to the right test.", function()

@@ -59,7 +59,7 @@ function ModuleScriptMonitor.UpdateTest(self: ModuleScriptMonitor, UpdateSource:
         if self.CurrentTest then
             self.CurrentTest.ContentsState = "MISSING"
             self.CurrentTest.ModuleScript = nil
-            if self.CurrentTest.State == "NOTRUN" then
+            if self.CurrentTest.State == "NOT_RUN" then
                 self.ParentTest:RemoveChildTest(self.CurrentTest)
                 self.CurrentTest = nil
             end
