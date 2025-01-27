@@ -15,6 +15,7 @@ export type Test = {
     SortIndex: number,
     State: TestState,
     ContentsState: TestContentsState,
+    ModuleScript: ModuleScript?,
     Output: {OutputEntry},
     ChildTests: {Test},
 } & typeof(setmetatable({}, Test))

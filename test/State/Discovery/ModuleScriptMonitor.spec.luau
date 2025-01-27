@@ -41,6 +41,7 @@ return function()
             local CurrentTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
             expect(CurrentTest.Name).to.equal("TestFolder1.ModuleScript.spec")
             expect(CurrentTest.ContentsState).to.equal("UPDATED")
+            expect(CurrentTest.ModuleScript).to.equal(TestModuleScript)
             expect(#TestParentTest.ChildTests).to.equal(1)
             expect(TestParentTest.ChildTests[1]).to.equal(CurrentTest)
         end)
@@ -79,6 +80,7 @@ return function()
             task.wait()
             expect(CurrentTest.Name).to.equal("TestFolder1.ModuleScript.spec") --Missing script names aren't updated.
             expect(CurrentTest.ContentsState).to.equal("MISSING")
+            expect(CurrentTest.ModuleScript).to.equal(nil)
             expect(TestParentTest.ChildTests[1]).to.equal(CurrentTest)
         end)
 
@@ -96,6 +98,7 @@ return function()
             task.wait()
             expect(CurrentTest.Name).to.equal("TestFolder1.ModuleScript.spec") --Missing script names aren't updated.
             expect(CurrentTest.ContentsState).to.equal("MISSING")
+            expect(CurrentTest.ModuleScript).to.equal(nil)
             expect(TestParentTest.ChildTests[1]).to.equal(CurrentTest)
         end)
 

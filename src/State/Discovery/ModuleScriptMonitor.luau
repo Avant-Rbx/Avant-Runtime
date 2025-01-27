@@ -58,6 +58,7 @@ function ModuleScriptMonitor.UpdateTest(self: ModuleScriptMonitor, UpdateSource:
     if not IsValidTest then
         if self.CurrentTest then
             self.CurrentTest.ContentsState = "MISSING"
+            self.CurrentTest.ModuleScript = nil
             if self.CurrentTest.State == "NOTRUN" then
                 self.ParentTest:RemoveChildTest(self.CurrentTest)
                 self.CurrentTest = nil
@@ -74,6 +75,7 @@ function ModuleScriptMonitor.UpdateTest(self: ModuleScriptMonitor, UpdateSource:
     --Update the test state.
     local CurrentTest = self.CurrentTest :: Test.Test
     CurrentTest.Name = self.ModuleScript:GetFullName()
+    CurrentTest.ModuleScript = self.ModuleScript
     if UpdateSource == "Create" or UpdateSource == "Source" then
         CurrentTest.ContentsState = "UPDATED"
     end
