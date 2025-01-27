@@ -12,6 +12,10 @@ return function()
             TestTest = Test.new()
         end)
 
+        afterEach(function()
+            TestTest:Destroy()
+        end)
+
         it("should create child tests.", function()
             local NewTest = TestTest:CreateChildTest()
             expect(TestTest.ChildTests[1]).to.equal(NewTest)
@@ -94,9 +98,16 @@ return function()
         end)
 
         it("should clear the output.", function()
+            local ClearedEventCalls = 0
+            TestTest.OutputCleared:Connect(function()
+                ClearedEventCalls += 1
+            end)
+
             TestTest:AddOutput(Enum.MessageType.MessageWarning, "Message1", "Message2")
             TestTest:ClearOutput()
             expect(#TestTest.Output).to.equal(0)
+            task.wait()
+            expect(ClearedEventCalls).to.equal(1)
         end)
     end)
 end

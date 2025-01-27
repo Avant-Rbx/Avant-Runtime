@@ -67,9 +67,12 @@ function ModuleScriptDiscovery.Destroy(self: ModuleScriptDiscovery): ()
 
     --Clear the ModuleScript monitors.
     for _, Monitor in self.Monitors do
-        Monitor:Destroy()
+        (Monitor :: ModuleScriptMonitor.ModuleScriptMonitor):Destroy()
     end
     self.Monitors = {}
+
+    --Clear the tests.
+    self.RootTest:Destroy()
 end
 
 

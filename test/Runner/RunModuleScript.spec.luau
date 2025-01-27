@@ -14,6 +14,10 @@ return function()
             TestTest.State = "SKIPPED"
         end)
 
+        afterEach(function()
+            TestTest:Destroy()
+        end)
+
         it("should not with no ModuleScript.", function()
             RunModuleScript(TestTest)
             expect(TestTest.State).to.equal("NOT_RUN")

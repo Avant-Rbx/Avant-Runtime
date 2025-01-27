@@ -1,8 +1,13 @@
 --State for a test, including sub-tests.
 --!strict
 
+local NexusInstance = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"))
+local TypedEvent = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("TypedEvent"))
+
 local Test = {}
 Test.__index = Test
+
+local NexusInstanceTest = NexusInstance.ToInstance(Test) :: NexusInstance.NexusInstanceClass<typeof(Test), () -> (Test)>
 
 export type TestState = "NOT_RUN" | "IN_PROGRESS" | "PASSED" | "FAILED" | "SKIPPED"
 export type TestContentsState = "NORMAL" | "UPDATED" | "MISSING"
@@ -12,7 +17,7 @@ export type OutputEntry = {
     Contents: {any},
     ContentsSize: number,
 }
-export type Test = {
+export type BaseTest = {
     Name: string,
     SortIndex: number,
     State: TestState,
@@ -22,29 +27,32 @@ export type Test = {
     StartTime: number?,
     EndTime: number?,
     ChildTests: {Test},
+    OutputAdded: TypedEvent.TypedEvent<OutputEntry>,
+    OutputCleared: TypedEvent.TypedEvent<>,
 } & typeof(setmetatable({}, Test))
+export type Test = NexusInstance.NexusInstance<BaseTest>
 
 
 
 --[[
 Creates a test.
 --]]
-function Test.new(): Test
-    return setmetatable({
-        Name = "Unnamed",
-        SortIndex = 1,
-        State = "NOT_RUN" :: TestState,
-        ContentsState = "NORMAL" :: TestContentsState,
-        Output = {},
-        ChildTests = {},
-    }, Test) :: Test
+function Test.__new(self: Test): ()
+    self.Name = "Unnamed"
+    self.SortIndex = 1
+    self.State = "NOT_RUN" :: TestState
+    self.ContentsState = "NORMAL" :: TestContentsState
+    self.Output = {}
+    self.ChildTests = {}
+    self.OutputAdded = self:CreateEvent()
+    self.OutputCleared = self:CreateEvent()
 end
 
 --[[
 Creates an uninitialized child test.
 --]]
 function Test.CreateChildTest(self: Test): Test
-    local NewTest = Test.new()
+    local NewTest = NexusInstanceTest.new()
     table.insert(self.ChildTests, NewTest)
     return NewTest
 end
@@ -56,6 +64,7 @@ function Test.RemoveChildTest(self: Test, ChildTest: Test): ()
     local Index = table.find(self.ChildTests, ChildTest)
     if not Index then return end
     table.remove(self.ChildTests, Index)
+    ChildTest:Destroy()
 end
 
 --[[
@@ -82,12 +91,14 @@ end
 Adds an output to the test.
 --]]
 function Test.AddOutput(self: Test, MessageType: Enum.MessageType, ...: any): ()
-    table.insert(self.Output, {
+    local Output = {
         Time = tick(),
         MessageType = MessageType,
         Contents = table.pack(...),
         ContentsSize = select("#", ...), --Handles nil being part of ...
-    } :: OutputEntry)
+    } :: OutputEntry
+    table.insert(self.Output, Output)
+    self.OutputAdded:Fire(Output)
 end
 
 --[[
@@ -125,8 +136,18 @@ Clears the output.
 --]]
 function Test.ClearOutput(self: Test): ()
     table.clear(self.Output)
+    self.OutputCleared:Fire()
+end
+
+--[[
+Destroys the test.
+--]]
+function Test.Destroy(self: Test): ()
+    for _, ChildTest in self.ChildTests do
+        (ChildTest :: Test):Destroy()
+    end
 end
 
 
 
-return Test
+return NexusInstanceTest

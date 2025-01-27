@@ -16,6 +16,7 @@ return function()
         end)
 
         afterEach(function()
+            TestTest:Destroy()
             TestModuleSandbox:Destroy()
         end)
 

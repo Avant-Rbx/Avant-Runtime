@@ -57,7 +57,7 @@ local function OutputTest(TestInstance: Test.Test, Prefix: string): ()
 
     --Print the child tests.
     for _, ChildTest in TestInstance.ChildTests do
-        OutputTest(ChildTest, `{Prefix}    `)
+        OutputTest(ChildTest :: Test.Test, `{Prefix}    `)
     end
 end
 
@@ -75,8 +75,8 @@ ModuleScriptDiscoveryInstance:Destroy()
 --Run the tests.
 for _, ModuleScriptTest in ModuleScriptTests do
     print(`Running test \"{ModuleScriptTest.Name}\"...`)
-    RunModuleScript(ModuleScriptTest)
-    OutputTest(ModuleScriptTest, "")
+    RunModuleScript(ModuleScriptTest :: Test.Test)
+    OutputTest(ModuleScriptTest :: Test.Test, "")
 end
 
 --Print the summary.

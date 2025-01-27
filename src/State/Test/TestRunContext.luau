@@ -43,7 +43,7 @@ function TestRunContext.PrepareChildTests(self: TestRunContext): ()
     for _, ChildTest in self.UnusedChildTests do
         ChildTest.SortIndex += 1000000
         ChildTest.State = "NOT_RUN"
-        ChildTest:ClearOutput()
+        (ChildTest :: Test.Test):ClearOutput()
     end
 end
 
@@ -74,7 +74,7 @@ Clears any unused child tests.
 --]]
 function TestRunContext.ClearUnusedChildTests(self: TestRunContext): ()
     for _, ChildTest in self.UnusedChildTests do
-        self.ParentTest:RemoveChildTest(ChildTest)
+        self.ParentTest:RemoveChildTest(ChildTest :: Test.Test)
     end
     self.UnusedChildTests = {}
 end

@@ -32,6 +32,10 @@ return function()
             TestTestRunContext = TestRunContext.new(TestTest)
         end)
 
+        afterEach(function()
+            TestTest:Destroy()
+        end)
+
         it("should prepare tests.", function()
             TestTestRunContext:PrepareChildTests()
             expect(#TestTestRunContext.UnusedChildTests).to.equal(3)
