@@ -1,0 +1,11 @@
+# Roblox files.
+*.rbxlx
+*.rbxmx
+*.rbxm
+*.rbxl
+
+# Rojo sourcemap.
+sourcemap.json
+
+# MacOS DS_Store.
+.DS_Store

@@ -1,0 +1,6 @@
+{
+    "name": "Avant-Runtime",
+    "tree": {
+        "$path": "./src"
+    }
+}
