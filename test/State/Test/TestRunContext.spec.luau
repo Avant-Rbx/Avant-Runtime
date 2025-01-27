@@ -17,6 +17,7 @@ return function()
             Test1.State = "PASSED"
             Test1.SortIndex = 1
             Test1.Name = "Test1"
+            Test1.Output = {{} :: any}
 
             local Test2 = TestTest:CreateChildTest()
             Test2.State = "FAILED"
@@ -37,12 +38,15 @@ return function()
             expect(TestTestRunContext.UnusedChildTests[1].Name).to.equal("Test1")
             expect(TestTestRunContext.UnusedChildTests[1].State).to.equal("NOTRUN")
             expect(TestTestRunContext.UnusedChildTests[1].SortIndex).to.equal(1000001)
+            expect(#TestTestRunContext.UnusedChildTests[1].Output).to.equal(0)
             expect(TestTestRunContext.UnusedChildTests[2].Name).to.equal("Test2")
             expect(TestTestRunContext.UnusedChildTests[2].State).to.equal("NOTRUN")
             expect(TestTestRunContext.UnusedChildTests[2].SortIndex).to.equal(1000002)
+            expect(#TestTestRunContext.UnusedChildTests[2].Output).to.equal(0)
             expect(TestTestRunContext.UnusedChildTests[3].Name).to.equal("Test2")
             expect(TestTestRunContext.UnusedChildTests[3].State).to.equal("NOTRUN")
             expect(TestTestRunContext.UnusedChildTests[3].SortIndex).to.equal(1000003)
+            expect(#TestTestRunContext.UnusedChildTests[3].Output).to.equal(0)
         end)
 
         it("should use existing tests.", function()

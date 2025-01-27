@@ -43,6 +43,7 @@ function TestRunContext.PrepareChildTests(self: TestRunContext): ()
     for _, ChildTest in self.UnusedChildTests do
         ChildTest.SortIndex += 1000000
         ChildTest.State = "NOTRUN"
+        ChildTest:ClearOutput()
     end
 end
 
