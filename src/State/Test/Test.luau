@@ -124,7 +124,7 @@ end
 Clears the output.
 --]]
 function Test.ClearOutput(self: Test): ()
-    self.Output = {}
+    table.clear(self.Output)
 end
 
 
