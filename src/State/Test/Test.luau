@@ -4,7 +4,7 @@
 local Test = {}
 Test.__index = Test
 
-export type TestState = "NOT_RUN" | "INPROGRESS" | "PASSED" | "FAILED" | "SKIPPED"
+export type TestState = "NOT_RUN" | "IN_PROGRESS" | "PASSED" | "FAILED" | "SKIPPED"
 export type TestContentsState = "NORMAL" | "UPDATED" | "MISSING"
 export type OutputEntry = {
     Time: number,
@@ -19,6 +19,8 @@ export type Test = {
     ContentsState: TestContentsState,
     ModuleScript: ModuleScript?,
     Output: {OutputEntry},
+    StartTime: number?,
+    EndTime: number?,
     ChildTests: {Test},
 } & typeof(setmetatable({}, Test))
 
@@ -45,6 +47,35 @@ function Test.CreateChildTest(self: Test): Test
     local NewTest = Test.new()
     table.insert(self.ChildTests, NewTest)
     return NewTest
+end
+
+--[[
+Removes a child test.
+--]]
+function Test.RemoveChildTest(self: Test, ChildTest: Test): ()
+    local Index = table.find(self.ChildTests, ChildTest)
+    if not Index then return end
+    table.remove(self.ChildTests, Index)
+end
+
+--[[
+Sets the state of the test.
+This is intended to capture timing information.
+--]]
+function Test.SetState(self: Test, State: TestState): ()
+    self.State = State
+    if State == "NOT_RUN" then
+        self.StartTime = nil
+        self.EndTime = nil
+    elseif State == "IN_PROGRESS" then
+        self.StartTime = tick()
+        self.EndTime = nil
+    else
+        if not self.StartTime then
+            self.StartTime = tick()
+        end
+        self.EndTime = tick()
+    end
 end
 
 --[[
@@ -94,15 +125,6 @@ Clears the output.
 --]]
 function Test.ClearOutput(self: Test): ()
     self.Output = {}
-end
-
---[[
-Removes a child test.
---]]
-function Test.RemoveChildTest(self: Test, ChildTest: Test): ()
-    local Index = table.find(self.ChildTests, ChildTest)
-    if not Index then return end
-    table.remove(self.ChildTests, Index)
 end
 
 

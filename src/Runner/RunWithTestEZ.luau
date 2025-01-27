@@ -19,7 +19,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
         --Get the test.
         local NewTest = CurrentTestRunContext:GetTest(Phrase)
         if NodeModifier == TestEZ.TestEnum.NodeModifier.Skip then
-            NewTest.State = "SKIPPED"
+            NewTest:SetState("SKIPPED")
         end
 
         --Create the child node.
@@ -30,7 +30,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
 
             --Update the state.
             if NewNode.modifier == TestEZ.TestEnum.NodeModifier.Skip and NewTest.State ~= "SKIPPED" then
-                NewTest.State = "SKIPPED"
+                NewTest:SetState("SKIPPED")
             end
         end
 
@@ -100,7 +100,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
                 end, function(ErrorMessage: string)
                     TestInstance:AddOutput(Enum.MessageType.MessageError, ErrorMessage)
                     TestInstance:AddOutput(Enum.MessageType.MessageInfo, debug.traceback(nil, 2))
-                    TestInstance.State = "FAILED"
+                    TestInstance:SetState("FAILED")
                     ErrorMessageToRethrow = ErrorMessage
                 end)
                 if ErrorMessageToRethrow then
@@ -112,16 +112,16 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
 
     --Run the test.
     local Arguments = table.pack(...)
-    TestInstance.State = "INPROGRESS"
+    TestInstance:SetState("IN_PROGRESS")
     xpcall(function()
         RunTest(table.unpack(Arguments))
-        if TestInstance.State == "INPROGRESS" then
-            TestInstance.State = "PASSED"
+        if TestInstance.State == "IN_PROGRESS" then
+            TestInstance:SetState("PASSED")
         end
     end, function(ErrorMessage: string)
         TestInstance:AddOutput(Enum.MessageType.MessageError, ErrorMessage)
         TestInstance:AddOutput(Enum.MessageType.MessageInfo, debug.traceback(nil, 2))
-        TestInstance.State = "FAILED"
+        TestInstance:SetState("FAILED")
     end)
 
     --Clear the unused tests.

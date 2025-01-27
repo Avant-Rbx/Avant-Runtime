@@ -28,7 +28,11 @@ Outputs the results of a test.
 --]]
 local function OutputTest(TestInstance: Test.Test, Prefix: string): ()
     --Print the test information.
-    local TestMessage = `{Prefix}[{TestInstance.State}] {TestInstance.Name}`
+    local DurationText = nil
+    if TestInstance.StartTime and TestInstance.EndTime then
+        DurationText = ` ({string.format("%.3f", TestInstance.EndTime - TestInstance.StartTime)} seconds)`
+    end
+    local TestMessage = `{Prefix}[{TestInstance.State}] {TestInstance.Name}{DurationText}`
     if TestInstance.State == "PASSED" then
         print(TestMessage)
     else

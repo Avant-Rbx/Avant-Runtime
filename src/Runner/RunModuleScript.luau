@@ -9,7 +9,7 @@ return function(TestInstance: Test.Test): ()
     --Set the test as NOT_RUN if there is no ModuleScript.
     local ModuleScript = TestInstance.ModuleScript
     if not ModuleScript then
-        TestInstance.State = "NOT_RUN"
+        TestInstance:SetState("NOT_RUN")
         return
     end
 

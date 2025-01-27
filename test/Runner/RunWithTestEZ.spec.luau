@@ -25,7 +25,7 @@ return function()
                 local ModuleScript = Instance.new("ModuleScript")
                 ModuleScript.Source = "return TestValue"
                 
-                assert(TestTest.State == "INPROGRESS")
+                assert(TestTest.State == "IN_PROGRESS")
                 assert(getfenv().TestValue == 3)
                 assert(require(ModuleScript) :: number == 3)
             end, TestModuleSandbox)
@@ -37,7 +37,7 @@ return function()
         it("should run simple expectations.", function()
             TestModuleSandbox.EnvironmentOverrides.TestValue = 3
             RunWithTestEZ(TestTest, function()
-                expect(TestTest.State).to.equal("INPROGRESS")
+                expect(TestTest.State).to.equal("IN_PROGRESS")
                 expect(getfenv().TestValue).to.equal(3)
             end, TestModuleSandbox)
             expect(TestTest.State).to.equal("PASSED")
