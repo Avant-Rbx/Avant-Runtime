@@ -1,6 +1,9 @@
 {
     "name": "Avant-Runtime",
     "tree": {
-        "$path": "./src"
+        "$path": "./src",
+        "TestEZ": {
+            "$path": "./module/TestEZ"
+        }
     }
 }
