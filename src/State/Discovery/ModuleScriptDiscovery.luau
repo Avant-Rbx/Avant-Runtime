@@ -29,7 +29,7 @@ function ModuleScriptDiscovery.new(Container: Instance): ModuleScriptDiscovery
     }, ModuleScriptDiscovery) :: ModuleScriptDiscovery
 
     --Connect ModuleScripts being added.
-    table.insert(self.EventConnections, Container.ChildAdded:Connect(function(Child)
+    table.insert(self.EventConnections, Container.DescendantAdded:Connect(function(Child)
         self:TrackModuleScript(Child)
     end))
     for _, Child in Container:GetDescendants() do
