@@ -108,5 +108,57 @@ return function()
             expect(TestModuleScriptMonitor.CurrentTest).to.equal(nil)
             expect(TestParentTest.ChildTests[1]).to.equal(nil)
         end)
+
+        it("should not re-use non-stale tests with the same name.", function()
+            local CurrentTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            TestParentTest:RemoveChildTest(CurrentTest)
+            TestModuleScriptMonitor.CurrentTest = nil
+
+            local StaleTest = TestParentTest:CreateChildTest()
+            StaleTest.Name = "TestFolder1.ModuleScript.spec"
+            StaleTest.ModuleScript = Instance.new("ModuleScript")
+            StaleTest.ContentsState = "MISSING"
+
+            TestModuleScriptMonitor:UpdateTest("Create")
+            local NewTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            expect(NewTest.Name).to.equal("TestFolder1.ModuleScript.spec")
+            expect(NewTest.ContentsState).to.equal("UPDATED")
+            expect(NewTest).to.never.equal(StaleTest)
+            expect(#TestParentTest.ChildTests).to.equal(2)
+        end)
+
+        it("should not re-use stale tests with different names.", function()
+            local CurrentTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            TestParentTest:RemoveChildTest(CurrentTest)
+            TestModuleScriptMonitor.CurrentTest = nil
+
+            local StaleTest = TestParentTest:CreateChildTest()
+            StaleTest.Name = "OtherName"
+            StaleTest.ContentsState = "MISSING"
+
+            TestModuleScriptMonitor:UpdateTest("Create")
+            local NewTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            expect(NewTest.Name).to.equal("TestFolder1.ModuleScript.spec")
+            expect(NewTest.ContentsState).to.equal("UPDATED")
+            expect(NewTest).to.never.equal(StaleTest)
+            expect(#TestParentTest.ChildTests).to.equal(2)
+        end)
+
+        it("should re-use stale tests with the same name.", function()
+            local CurrentTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            TestParentTest:RemoveChildTest(CurrentTest)
+            TestModuleScriptMonitor.CurrentTest = nil
+
+            local StaleTest = TestParentTest:CreateChildTest()
+            StaleTest.Name = "TestFolder1.ModuleScript.spec"
+            StaleTest.ContentsState = "MISSING"
+
+            TestModuleScriptMonitor:UpdateTest("Create")
+            local NewTest = TestModuleScriptMonitor.CurrentTest :: Test.Test
+            expect(NewTest.Name).to.equal("TestFolder1.ModuleScript.spec")
+            expect(NewTest.ContentsState).to.equal("UPDATED")
+            expect(NewTest).to.equal(StaleTest)
+            expect(#TestParentTest.ChildTests).to.equal(1)
+        end)
     end)
 end

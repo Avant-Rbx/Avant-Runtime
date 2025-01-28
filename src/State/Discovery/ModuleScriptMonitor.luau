@@ -68,6 +68,15 @@ function ModuleScriptMonitor.UpdateTest(self: ModuleScriptMonitor, UpdateSource:
     end
 
     --Create the test if it doesn't exist.
+    --When possible, re-use an existing orphaned test in case the module was deleted and recreated.
+    if not self.CurrentTest then
+        for _, ChildTest in self.ParentTest.ChildTests do
+            if ChildTest.ModuleScript then continue end
+            if ChildTest.Name ~= self.ModuleScript:GetFullName() then continue end
+            self.CurrentTest = ChildTest :: Test.Test
+            break
+        end
+    end
     if not self.CurrentTest then
         self.CurrentTest = self.ParentTest:CreateChildTest()
     end
