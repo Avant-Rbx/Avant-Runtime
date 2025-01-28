@@ -17,15 +17,31 @@ return function()
         end)
 
         it("should create child tests.", function()
+            local TestAddedCalls = {}
+            TestTest.TestAdded:Connect(function(AddedTest)
+                table.insert(TestAddedCalls, AddedTest)
+            end)
+
             local NewTest = TestTest:CreateChildTest()
+            task.wait()
             expect(TestTest.ChildTests[1]).to.equal(NewTest)
+            expect(#TestAddedCalls).to.equal(1)
+            expect(TestAddedCalls[1]).to.equal(NewTest)
         end)
 
         it("should remove child tests.", function()
+            local TestRemovedCalls = {}
+            TestTest.TestRemoved:Connect(function(RemovedTest)
+                table.insert(TestRemovedCalls, RemovedTest)
+            end)
+
             local NewTest = TestTest:CreateChildTest()
             expect(TestTest.ChildTests[1]).to.equal(NewTest)
             TestTest:RemoveChildTest(NewTest)
+            task.wait()
             expect(TestTest.ChildTests[1]).to.equal(nil)
+            expect(#TestRemovedCalls).to.equal(1)
+            expect(TestRemovedCalls[1]).to.equal(NewTest)
         end)
 
         it("should not remove unknown child tests.", function()

@@ -27,6 +27,8 @@ export type BaseTest = {
     StartTime: number?,
     EndTime: number?,
     ChildTests: {Test},
+    TestAdded: TypedEvent.TypedEvent<Test>,
+    TestRemoved: TypedEvent.TypedEvent<Test>,
     OutputAdded: TypedEvent.TypedEvent<OutputEntry>,
     OutputCleared: TypedEvent.TypedEvent<>,
 } & typeof(setmetatable({}, Test))
@@ -44,6 +46,8 @@ function Test.__new(self: Test): ()
     self.ContentsState = "NORMAL" :: TestContentsState
     self.Output = {}
     self.ChildTests = {}
+    self.TestAdded = self:CreateEvent()
+    self.TestRemoved = self:CreateEvent()
     self.OutputAdded = self:CreateEvent()
     self.OutputCleared = self:CreateEvent()
 end
@@ -54,6 +58,7 @@ Creates an uninitialized child test.
 function Test.CreateChildTest(self: Test): Test
     local NewTest = NexusInstanceTest.new()
     table.insert(self.ChildTests, NewTest)
+    self.TestAdded:Fire(NewTest)
     return NewTest
 end
 
@@ -65,6 +70,7 @@ function Test.RemoveChildTest(self: Test, ChildTest: Test): ()
     if not Index then return end
     table.remove(self.ChildTests, Index)
     ChildTest:Destroy()
+    self.TestRemoved:Fire(ChildTest)
 end
 
 --[[
