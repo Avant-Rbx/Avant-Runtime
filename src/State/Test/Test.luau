@@ -1,6 +1,14 @@
 --State for a test, including sub-tests.
 --!strict
 
+local UNIT_TEST_STATE_PRIORITY = {
+    NOT_RUN = 1,
+    PASSED = 2,
+    SKIPPED = 3,
+    FAILED = 4,
+    IN_PROGRESS = 5,
+} :: {[TestState]: number}
+
 local NexusInstance = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"))
 local TypedEvent = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("TypedEvent"))
 
@@ -21,6 +29,7 @@ export type BaseTest = {
     Name: string,
     SortIndex: number,
     State: TestState,
+    CombinedState: TestState,
     ContentsState: TestContentsState,
     ModuleScript: ModuleScript?,
     Output: {OutputEntry},
@@ -43,6 +52,7 @@ function Test.__new(self: Test): ()
     self.Name = "Unnamed"
     self.SortIndex = 1
     self.State = "NOT_RUN" :: TestState
+    self.CombinedState = "NOT_RUN" :: TestState
     self.ContentsState = "NORMAL" :: TestContentsState
     self.Output = {}
     self.ChildTests = {}
@@ -56,9 +66,18 @@ end
 Creates an uninitialized child test.
 --]]
 function Test.CreateChildTest(self: Test): Test
+    --Create the new test.
     local NewTest = NexusInstanceTest.new()
     table.insert(self.ChildTests, NewTest)
     self.TestAdded:Fire(NewTest)
+
+    --Connect the combined state changing.
+    --This event is not stored because it will be disconnected by the test on removal.
+    NewTest:GetPropertyChangedSignal("CombinedState"):Connect(function()
+        self:UpdateCombinedState()
+    end)
+
+    --Return the test.
     return NewTest
 end
 
@@ -71,6 +90,7 @@ function Test.RemoveChildTest(self: Test, ChildTest: Test): ()
     table.remove(self.ChildTests, Index)
     ChildTest:Destroy()
     self.TestRemoved:Fire(ChildTest)
+    self:UpdateCombinedState()
 end
 
 --[[
@@ -91,6 +111,19 @@ function Test.SetState(self: Test, State: TestState): ()
         end
         self.EndTime = tick()
     end
+    self:UpdateCombinedState()
+end
+
+--[[
+Updates the combined state.
+--]]
+function Test.UpdateCombinedState(self: Test): ()
+    local NewState = self.State
+    for _, ChildTest in self.ChildTests do
+        if UNIT_TEST_STATE_PRIORITY[ChildTest.CombinedState] < UNIT_TEST_STATE_PRIORITY[NewState] then continue end
+        NewState = ChildTest.CombinedState
+    end
+    self.CombinedState = NewState :: TestState
 end
 
 --[[
