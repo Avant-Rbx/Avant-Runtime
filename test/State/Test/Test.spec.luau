@@ -16,6 +16,18 @@ return function()
             TestTest:Destroy()
         end)
 
+        it("should return full test names.", function()
+            TestTest.Name = "Test1"
+            local NewTest1 = TestTest:CreateChildTest()
+            NewTest1.Name = "Test2"
+            local NewTest2 = NewTest1:CreateChildTest()
+            NewTest2.Name = "Test3"
+
+            expect(TestTest:GetFullName()).to.equal("Test1")
+            expect(NewTest1:GetFullName()).to.equal("Test1 → Test2")
+            expect(NewTest2:GetFullName()).to.equal("Test1 → Test2 → Test3")
+        end)
+
         it("should create child tests.", function()
             local TestAddedCalls = {}
             TestTest.TestAdded:Connect(function(AddedTest)
@@ -24,6 +36,7 @@ return function()
 
             local NewTest = TestTest:CreateChildTest()
             task.wait()
+            expect(NewTest.ParentTest).to.equal(TestTest)
             expect(TestTest.ChildTests[1]).to.equal(NewTest)
             expect(#TestAddedCalls).to.equal(1)
             expect(TestAddedCalls[1]).to.equal(NewTest)
@@ -39,6 +52,7 @@ return function()
             expect(TestTest.ChildTests[1]).to.equal(NewTest)
             TestTest:RemoveChildTest(NewTest)
             task.wait()
+            expect(NewTest.ParentTest).to.equal(nil)
             expect(TestTest.ChildTests[1]).to.equal(nil)
             expect(#TestRemovedCalls).to.equal(1)
             expect(TestRemovedCalls[1]).to.equal(NewTest)

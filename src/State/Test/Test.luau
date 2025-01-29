@@ -35,6 +35,7 @@ export type BaseTest = {
     Output: {OutputEntry},
     StartTime: number?,
     EndTime: number?,
+    ParentTest: Test?,
     ChildTests: {Test},
     TestAdded: TypedEvent.TypedEvent<Test>,
     TestRemoved: TypedEvent.TypedEvent<Test>,
@@ -63,11 +64,22 @@ function Test.__new(self: Test): ()
 end
 
 --[[
+Returns the full name of the test.
+--]]
+function Test.GetFullName(self: Test): string
+    if not self.ParentTest then
+        return self.Name
+    end
+    return `{self.ParentTest:GetFullName()} → {self.Name}`
+end
+
+--[[
 Creates an uninitialized child test.
 --]]
 function Test.CreateChildTest(self: Test): Test
     --Create the new test.
     local NewTest = NexusInstanceTest.new()
+    NewTest.ParentTest = self
     table.insert(self.ChildTests, NewTest)
     self.TestAdded:Fire(NewTest)
 
@@ -183,6 +195,7 @@ end
 Destroys the test.
 --]]
 function Test.Destroy(self: Test): ()
+    self.ParentTest = nil
     for _, ChildTest in self.ChildTests do
         (ChildTest :: Test):Destroy()
     end
