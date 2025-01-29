@@ -99,6 +99,7 @@ This is intended to capture timing information.
 --]]
 function Test.SetState(self: Test, State: TestState): ()
     self.State = State
+    self.ContentsState = "NORMAL"
     if State == "NOT_RUN" then
         self.StartTime = nil
         self.EndTime = nil

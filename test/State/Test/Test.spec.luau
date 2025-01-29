@@ -52,29 +52,37 @@ return function()
         end)
 
         it("should reset the start and end times.", function()
+            TestTest.ContentsState = "UPDATED"
             TestTest.StartTime = tick()
             TestTest.EndTime = tick()
             TestTest:SetState("NOT_RUN")
+            expect(TestTest.ContentsState).to.equal("NORMAL")
             expect(TestTest.StartTime).to.equal(nil)
             expect(TestTest.EndTime).to.equal(nil)
         end)
 
         it("should reset the end time.", function()
+            TestTest.ContentsState = "UPDATED"
             TestTest.EndTime = tick()
             TestTest:SetState("IN_PROGRESS")
+            expect(TestTest.ContentsState).to.equal("NORMAL")
             expect(TestTest.StartTime).to.never.equal(nil)
             expect(TestTest.EndTime).to.equal(nil)
         end)
 
         it("should store the end time.", function()
+            TestTest.ContentsState = "UPDATED"
             TestTest.StartTime = 10
             TestTest:SetState("PASSED")
+            expect(TestTest.ContentsState).to.equal("NORMAL")
             expect(TestTest.StartTime).to.equal(10)
             expect(TestTest.EndTime).to.never.equal(nil)
         end)
 
         it("should store the start and end time.", function()
+            TestTest.ContentsState = "UPDATED"
             TestTest:SetState("PASSED")
+            expect(TestTest.ContentsState).to.equal("NORMAL")
             expect(TestTest.StartTime).to.never.equal(nil)
             expect(TestTest.EndTime).to.never.equal(nil)
         end)
