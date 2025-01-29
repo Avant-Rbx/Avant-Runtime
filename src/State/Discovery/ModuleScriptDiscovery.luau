@@ -27,6 +27,7 @@ function ModuleScriptDiscovery.new(Container: Instance): ModuleScriptDiscovery
         Monitors = {},
         EventConnections = {},
     }, ModuleScriptDiscovery) :: ModuleScriptDiscovery
+    self.RootTest.Hidden = true
 
     --Connect ModuleScripts being added.
     table.insert(self.EventConnections, Container.DescendantAdded:Connect(function(Child)

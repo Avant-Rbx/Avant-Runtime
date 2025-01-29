@@ -28,6 +28,7 @@ export type OutputEntry = {
 export type BaseTest = {
     Name: string,
     SortIndex: number,
+    Hidden: boolean,
     State: TestState,
     CombinedState: TestState,
     ContentsState: TestContentsState,
@@ -52,6 +53,7 @@ Creates a test.
 function Test.__new(self: Test): ()
     self.Name = "Unnamed"
     self.SortIndex = 1
+    self.Hidden = false
     self.State = "NOT_RUN" :: TestState
     self.CombinedState = "NOT_RUN" :: TestState
     self.ContentsState = "NORMAL" :: TestContentsState
@@ -67,7 +69,7 @@ end
 Returns the full name of the test.
 --]]
 function Test.GetFullName(self: Test): string
-    if not self.ParentTest then
+    if not self.ParentTest or self.ParentTest.Hidden then
         return self.Name
     end
     return `{self.ParentTest:GetFullName()} → {self.Name}`

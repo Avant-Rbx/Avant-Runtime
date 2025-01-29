@@ -26,6 +26,10 @@ return function()
             expect(TestTest:GetFullName()).to.equal("Test1")
             expect(NewTest1:GetFullName()).to.equal("Test1 → Test2")
             expect(NewTest2:GetFullName()).to.equal("Test1 → Test2 → Test3")
+
+            TestTest.Hidden = true
+            expect(NewTest1:GetFullName()).to.equal("Test2")
+            expect(NewTest2:GetFullName()).to.equal("Test2 → Test3")
         end)
 
         it("should create child tests.", function()
