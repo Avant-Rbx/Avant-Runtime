@@ -293,6 +293,8 @@ return function()
         end)
 
         it("should reuse and clear child tests.", function()
+            TestTest.ContentState = "UPDATED"
+
             local DescribeTest = TestTest:CreateChildTest()
             DescribeTest.Name = "A test message"
             DescribeTest.State = "SKIPPED"
@@ -318,6 +320,7 @@ return function()
                 end)
             end, TestModuleSandbox)
             expect(TestTest.State).to.equal("PASSED")
+            expect(TestTest.ContentsState).to.equal("NORMAL")
             expect(#TestTest.Output).to.equal(1)
             expect(TestTest.Output[1].Contents[1]).to.equal("Test print 1")
             expect(#TestTest.ChildTests).to.equal(1)

@@ -113,7 +113,6 @@ This is intended to capture timing information.
 --]]
 function Test.SetState(self: Test, State: TestState): ()
     self.State = State
-    self.ContentsState = "NORMAL"
     if State == "NOT_RUN" then
         self.StartTime = nil
         self.EndTime = nil
@@ -186,11 +185,19 @@ function Test.AddOutputForCall(self: Test, MessageType: Enum.MessageType, ...: a
 end
 
 --[[
-Clears the output.
+Recursively resets the state of the test and all child tests.
 --]]
-function Test.ClearOutput(self: Test): ()
+function Test.ResetTestState(self: Test): ()
+    --Reset the test state.
+    self:SetState("NOT_RUN")
+    self.ContentsState = "NORMAL"
     table.clear(self.Output)
     self.OutputCleared:Fire()
+
+    --Reset the test state of all child tests.
+    for _, ChildTest in self.ChildTests do
+        (ChildTest :: Test):ResetTestState()
+    end
 end
 
 --[[
