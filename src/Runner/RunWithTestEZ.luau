@@ -114,6 +114,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
 
     --Run the test.
     local Arguments = table.pack(...)
+    TestInstance:ClearOutput()
     TestInstance:SetState("IN_PROGRESS")
     xpcall(function()
         RunTest(table.unpack(Arguments))
