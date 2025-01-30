@@ -41,17 +41,19 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
         return NewNode, NewTest
     end
 
+    --Add print statements to the module sandbox.
+    Sandbox.EnvironmentOverrides["print"] = function(...)
+        TestInstance:AddOutputForCall(Enum.MessageType.MessageOutput, ...)
+    end
+    Sandbox.EnvironmentOverrides["warn"] = function(...)
+        TestInstance:AddOutputForCall(Enum.MessageType.MessageWarning, ...)
+    end
+
     --Prepare the environment.
     local Environment = {}
     Environment["RunTestFunctionHash"] = tostring(RunTest)
     Environment["AddTestOutput"] = function(MessageType: Enum.MessageType, ...)
         TestInstance:AddOutput(MessageType, ...)
-    end
-    Environment["print"] = function(...)
-        TestInstance:AddOutputForCall(Enum.MessageType.MessageOutput, ...)
-    end
-    Environment["warn"] = function(...)
-        TestInstance:AddOutputForCall(Enum.MessageType.MessageWarning, ...)
     end
     setmetatable(Environment, {__index = Sandbox.EnvironmentOverrides})
     setfenv(RunTest, Environment :: any)

@@ -69,5 +69,22 @@ return function()
             expect(TestTest.Output[1].Contents[1]).to.equal("Test print 1")
             expect(#TestTest.ChildTests).to.equal(0)
         end)
+
+        it("should capture print statements from modules.", function()
+            local ModuleScript1 = Instance.new("ModuleScript")
+            ModuleScript1.Source = "print(\"Test print 1\") return require(script.ModuleScript)"
+            TestTest.ModuleScript = ModuleScript1
+            
+            local ModuleScript2 = Instance.new("ModuleScript")
+            ModuleScript2.Source = "print(\"Test print 2\") return true"
+            ModuleScript2.Parent = ModuleScript1
+
+            RunModuleScript(TestTest)
+            expect(TestTest.State).to.equal("PASSED")
+            expect(#TestTest.Output).to.equal(2)
+            expect(TestTest.Output[1].Contents[1]).to.equal("Test print 1")
+            expect(TestTest.Output[2].Contents[1]).to.equal("Test print 2")
+            expect(#TestTest.ChildTests).to.equal(0)
+        end)
     end)
 end
