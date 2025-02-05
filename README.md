@@ -5,9 +5,11 @@ see [Avant-Plugin](https://github.com/Avant-Rbx/Avant-Plugin).
 This is the successor to [Nexus Unit Testing](https://github.com/TheNexusAvenger/Nexus-Unit-Testing).
 
 ⚠️ At the moment, only [TestEZ](https://github.com/Roblox/testez) is supported.
-Support of [Jest](https://github.com/Roblox/jest-roblox) is planned, but
-examples of usage in projects are required. Please create or add to a GitHub
-Issue for this.
+Support of [Jest](https://github.com/Roblox/jest-roblox) is wanted, but isn't
+supported due to the difficulty of integration. Help is wanted to properly integrate
+Jest. The main problem is creating sub-tests and updating their state at the end
+of `describe`, `it`, and others, as well as properly starting tests with the
+developer-provied runtime.
 
 ## Goals
 Avant exists to provide the following:
