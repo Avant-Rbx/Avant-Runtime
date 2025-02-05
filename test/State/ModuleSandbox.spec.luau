@@ -71,6 +71,18 @@ return function()
             })).to.equal(5)
         end)
 
+        it("should handle loadstring.", function()
+            TestParentModuleSandbox.EnvironmentOverrides["TestValue1"] = 3
+            local ModuleScript = Instance.new("ModuleScript")
+            ModuleScript.Source = "return loadstring('return {TestValue1, TestValue2}')()"
+
+            local Result = TestChildModuleSandbox:GetModule(ModuleScript, {
+                TestValue2 = 5
+            })
+            expect(Result[1]).to.equal(3)
+            expect(Result[2]).to.equal(5)
+        end)
+
         it("should handle Archivable.", function()
             local ModuleScript = Instance.new("ModuleScript")
             ModuleScript.Archivable = false

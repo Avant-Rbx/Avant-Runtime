@@ -37,6 +37,11 @@ function ModuleSandbox.new(ParentSandbox: ModuleSandbox?): ModuleSandbox
     self.EnvironmentOverrides["require"] = function(ModuleScript: ModuleScript): any
         return self:GetModule(ModuleScript)
     end
+    self.EnvironmentOverrides["loadstring"] = function(...): any
+        local LoadedFunction = loadstring(...) :: any
+        setfenv(LoadedFunction, getfenv(debug.info(coroutine.running(), 2, "f")))
+        return LoadedFunction
+    end
 
     --Return the object.
     return self
