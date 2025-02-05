@@ -56,6 +56,17 @@ return function()
             expect(TestChildModuleSandbox:GetModule(ModuleScript)).to.equal(3)
         end)
 
+        it("should handle getting the global environment.", function()
+            TestParentModuleSandbox.EnvironmentOverrides["TestValue"] = 3
+
+            local ModuleScript = Instance.new("ModuleScript")
+            ModuleScript.Source = "return {getfenv(0).TestValue, getfenv().TestValue}"
+
+            local Result = TestChildModuleSandbox:GetModule(ModuleScript)
+            expect(Result[1]).to.equal(3)
+            expect(Result[2]).to.equal(3)
+        end)
+
         it("should not require non-ModuleScripts.", function()
             expect(function()
                 TestChildModuleSandbox:GetModule(Instance.new("Part") :: any)

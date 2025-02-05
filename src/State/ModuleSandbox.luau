@@ -37,6 +37,15 @@ function ModuleSandbox.new(ParentSandbox: ModuleSandbox?): ModuleSandbox
     self.EnvironmentOverrides["require"] = function(ModuleScript: ModuleScript): any
         return self:GetModule(ModuleScript)
     end
+    self.EnvironmentOverrides["getfenv"] = function(Stack: any): any
+        if Stack == 0 then
+            return self.EnvironmentOverrides
+        end
+        if not Stack or typeof(Stack) == "number" then
+            return getfenv((Stack or 1) + 1)
+        end
+        return getfenv(Stack)
+    end
     self.EnvironmentOverrides["loadstring"] = function(...): any
         local LoadedFunction = loadstring(...) :: any
         setfenv(LoadedFunction, getfenv(debug.info(coroutine.running(), 2, "f")))
