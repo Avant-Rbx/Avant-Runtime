@@ -23,17 +23,17 @@ return function()
             TestChildModuleSandbox.EnvironmentOverrides["TestValue"] = 5
 
             local ModuleScript = Instance.new("ModuleScript")
-            ModuleScript.Source = "return {script = script, getfenv = getfenv, TestValue = TestValue}"
+            ModuleScript.Source = "return {script = script, getmetatable = getmetatable, TestValue = TestValue}"
 
             local Result = TestChildModuleSandbox:GetModule(ModuleScript)
             expect(Result.script).to.equal(ModuleScript)
-            expect(Result.getfenv).to.equal(getfenv) --getfenv tests that non-overriden values still exist.
+            expect(Result.getmetatable).to.equal(getmetatable) --getmetatable tests that non-overriden values still exist.
             expect(Result.TestValue).to.equal(5)
 
             TestChildModuleSandbox.EnvironmentOverrides["TestValue"] = 10
             local NewResult = TestChildModuleSandbox:GetModule(ModuleScript)
             expect(NewResult.script).to.equal(ModuleScript)
-            expect(NewResult.getfenv).to.equal(getfenv)
+            expect(NewResult.getmetatable).to.equal(getmetatable)
             expect(NewResult.TestValue).to.equal(5)
         end)
 
