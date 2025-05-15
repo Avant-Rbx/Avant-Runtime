@@ -2,7 +2,11 @@
 --A sandbox can have child versions that have independently loaded versions.
 --!strict
 
-local ScriptEditorService = game:GetService("ScriptEditorService")
+--ScriptEditorService causes an error in Open Cloud Luau execution.
+local ScriptEditorService: ScriptEditorService? = nil
+pcall(function()
+    ScriptEditorService = game:GetService("ScriptEditorService")
+end)
 
 local ModuleSandbox = {}
 ModuleSandbox.__index = ModuleSandbox
@@ -102,7 +106,7 @@ function ModuleSandbox.GetModule(self: ModuleSandbox, Module: ModuleScript, Envi
     Module.Archivable = true
     local ClonedModule = Module:Clone()
     _G[ClonedModule] = Environment
-    ClonedModule.Source = `local function Load() {ScriptEditorService:GetEditorSource(Module)}\nend\n\nsetfenv(Load, _G[script])\n_G[script] = nil\nreturn Load()`
+    ClonedModule.Source = `local function Load() {ScriptEditorService and ScriptEditorService:GetEditorSource(Module) or Module.Source}\nend\n\nsetfenv(Load, _G[script])\n_G[script] = nil\nreturn Load()`
     Module.Archivable = IsArchivable
     ClonedModule.Archivable = IsArchivable
     self.ModuleLookup[Module] = ClonedModule
