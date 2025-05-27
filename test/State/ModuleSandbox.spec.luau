@@ -84,11 +84,13 @@ return function()
 
         it("should handle loadstring.", function()
             --loadstring is not available in Open Cloud, so this test can't run.
-            xpcall(function()
+            local Worked = pcall(function()
                 loadstring("return true")
-            end, function()
-                SKIP("loadstring not available.")
             end)
+            if not Worked then
+                SKIP("loadstring not available.")
+                return
+            end
 
             TestParentModuleSandbox.EnvironmentOverrides["TestValue1"] = 3
             local ModuleScript = Instance.new("ModuleScript")
