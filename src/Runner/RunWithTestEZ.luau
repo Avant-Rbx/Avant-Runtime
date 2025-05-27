@@ -4,7 +4,7 @@
 local Test = require(script.Parent.Parent:WaitForChild("State"):WaitForChild("Test"):WaitForChild("Test"))
 local TestRunContext = require(script.Parent.Parent:WaitForChild("State"):WaitForChild("Test"):WaitForChild("TestRunContext"))
 local ModuleSandbox = require(script.Parent.Parent:WaitForChild("State"):WaitForChild("ModuleSandbox"))
-local TestEZ = require(script.Parent.Parent:WaitForChild("TestEZ"))
+local TestEZ = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("TestEZ"))
 
 local RunTestEZTest = nil
 RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestNode: any, Sandbox: ModuleSandbox.ModuleSandbox, ...: any): ()

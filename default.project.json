@@ -2,11 +2,8 @@
     "name": "Avant-Runtime",
     "tree": {
         "$path": "./src",
-        "NexusInstance": {
-            "$path": "./module/Nexus-Instance"
-        },
-        "TestEZ": {
-            "$path": "./module/TestEZ"
+        "Packages": {
+            "$path": "./Packages"
         }
     }
 }

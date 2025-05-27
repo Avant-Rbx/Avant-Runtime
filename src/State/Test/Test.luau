@@ -9,8 +9,7 @@ local UNIT_TEST_STATE_PRIORITY = {
     IN_PROGRESS = 5,
 } :: {[TestState]: number}
 
-local NexusInstance = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"))
-local TypedEvent = require(script.Parent.Parent.Parent:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("TypedEvent"))
+local NexusInstance = require(script.Parent.Parent.Parent:WaitForChild("Packages"):WaitForChild("NexusInstance"))
 
 local Test = {}
 Test.__index = Test
@@ -38,10 +37,10 @@ export type BaseTest = {
     EndTime: number?,
     ParentTest: Test?,
     ChildTests: {Test},
-    TestAdded: TypedEvent.TypedEvent<Test>,
-    TestRemoved: TypedEvent.TypedEvent<Test>,
-    OutputAdded: TypedEvent.TypedEvent<OutputEntry>,
-    OutputCleared: TypedEvent.TypedEvent<>,
+    TestAdded: NexusInstance.TypedEvent<Test>,
+    TestRemoved: NexusInstance.TypedEvent<Test>,
+    OutputAdded: NexusInstance.TypedEvent<OutputEntry>,
+    OutputCleared: NexusInstance.TypedEvent<>,
 } & typeof(setmetatable({}, Test))
 export type Test = NexusInstance.NexusInstance<BaseTest>
 

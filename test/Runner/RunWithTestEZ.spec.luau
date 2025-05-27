@@ -293,8 +293,6 @@ return function()
         end)
 
         it("should reuse and clear child tests.", function()
-            TestTest.ContentState = "UPDATED"
-
             local DescribeTest = TestTest:CreateChildTest()
             DescribeTest.Name = "A test message"
             DescribeTest.State = "SKIPPED"
