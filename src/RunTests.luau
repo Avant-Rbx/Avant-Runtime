@@ -14,19 +14,12 @@ local Test = require(script.Parent:WaitForChild("State"):WaitForChild("Test"):Wa
 local MdouleScriptDiscovery = require(script.Parent:WaitForChild("State"):WaitForChild("Discovery"):WaitForChild("ModuleScriptDiscovery"))
 local FormatLines = require(script.Parent:WaitForChild("Util"):WaitForChild("FormatLines"))
 
-local StateSummary = {
-    NOT_RUN = 0,
-    PASSED = 0,
-    FAILED = 0,
-    SKIPPED = 0,
-}
-
 
 
 --[[
 Outputs the results of a test.
 --]]
-local function OutputTest(TestInstance: Test.Test, Prefix: string): ()
+local function OutputTest(TestInstance: Test.Test, Prefix: string, StateSummary: {[Test.TestState]: number}): ()
     --Print the test information.
     local DurationText = nil
     if TestInstance.StartTime and TestInstance.EndTime then
@@ -57,33 +50,42 @@ local function OutputTest(TestInstance: Test.Test, Prefix: string): ()
 
     --Print the child tests.
     for _, ChildTest in TestInstance.ChildTests do
-        OutputTest(ChildTest :: Test.Test, `{Prefix}    `)
+        OutputTest(ChildTest :: Test.Test, `{Prefix}    `, StateSummary)
     end
 end
 
 
 
---Discover the ModuleScript tests.
-local ModuleScriptDiscoveryInstance = MdouleScriptDiscovery.new(game)
-local ModuleScriptTests = {}
-for _, ChildTest in ModuleScriptDiscoveryInstance.RootTest.ChildTests do
-    table.insert(ModuleScriptTests, ChildTest)
-end
-table.sort(ModuleScriptTests, function(a, b) return a.Name < b.Name end)
-ModuleScriptDiscoveryInstance:Destroy()
+return function()
+    local StateSummary = {
+        NOT_RUN = 0,
+        PASSED = 0,
+        FAILED = 0,
+        SKIPPED = 0,
+    }
 
---Run the tests.
-for _, ModuleScriptTest in ModuleScriptTests do
-    print(`Running test \"{ModuleScriptTest.Name}\"...`)
-    RunModuleScript(ModuleScriptTest :: Test.Test)
-    OutputTest(ModuleScriptTest :: Test.Test, "")
-end
+    --Discover the ModuleScript tests.
+    local ModuleScriptDiscoveryInstance = MdouleScriptDiscovery.new(game)
+    local ModuleScriptTests = {}
+    for _, ChildTest in ModuleScriptDiscoveryInstance.RootTest.ChildTests do
+        table.insert(ModuleScriptTests, ChildTest)
+    end
+    table.sort(ModuleScriptTests, function(a, b) return a.Name < b.Name end)
+    ModuleScriptDiscoveryInstance:Destroy()
 
---Print the summary.
-print("\nTest summary:")
-for State, Total in StateSummary do
-    print(`    {State}: {Total}`)
-end
+    --Run the tests.
+    for _, ModuleScriptTest in ModuleScriptTests do
+        print(`Running test \"{ModuleScriptTest.Name}\"...`)
+        RunModuleScript(ModuleScriptTest :: Test.Test)
+        OutputTest(ModuleScriptTest :: Test.Test, "", StateSummary)
+    end
 
---Return the summary.
-return StateSummary
+    --Print the summary.
+    print("\nTest summary:")
+    for State, Total in StateSummary do
+        print(`    {State}: {Total}`)
+    end
+
+    --Return the summary.
+    return StateSummary
+end
