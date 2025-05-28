@@ -4,7 +4,7 @@ repository = "https://github.com/Avant-Rbx/Avant-Runtime"
 description = "Runtime for running unit tests on Roblox."
 license = "MIT"
 authors = ["TheNexusAvenger"]
-version = "1.2.0"
+version = "1.2.1"
 
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
