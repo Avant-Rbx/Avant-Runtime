@@ -3,9 +3,9 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Test = require(ReplicatedStorage.AvantRuntime.State.Test.Test)
-local ModuleSandbox = require(ReplicatedStorage.AvantRuntime.State.ModuleSandbox)
-local RunWithTestEZ = require(ReplicatedStorage.AvantRuntime.Runner.RunWithTestEZ)
+local Test = require(ReplicatedStorage.Packages.AvantRuntime.State.Test.Test)
+local ModuleSandbox = require(ReplicatedStorage.Packages.AvantRuntime.State.ModuleSandbox)
+local RunWithTestEZ = require(ReplicatedStorage.Packages.AvantRuntime.Runner.RunWithTestEZ)
 
 return function()
     describe("The RunWithTestEZ function", function()

@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ModuleScriptDiscovery = require(ReplicatedStorage.AvantRuntime.State.Discovery.ModuleScriptDiscovery)
+local ModuleScriptDiscovery = require(ReplicatedStorage.Packages.AvantRuntime.State.Discovery.ModuleScriptDiscovery)
 
 return function()
     describe("A ModuleScriptDiscovery", function()

@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local FormatLines = require(ReplicatedStorage.AvantRuntime.Util.FormatLines)
+local FormatLines = require(ReplicatedStorage.Packages.AvantRuntime.Util.FormatLines)
 
 return function()
     describe("The ModuleSandbox function", function()

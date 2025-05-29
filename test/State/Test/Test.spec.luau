@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Test = require(ReplicatedStorage.AvantRuntime.State.Test.Test)
+local Test = require(ReplicatedStorage.Packages.AvantRuntime.State.Test.Test)
 
 return function()
     describe("A Test", function()

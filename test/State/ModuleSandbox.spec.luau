@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ModuleSandbox = require(ReplicatedStorage.AvantRuntime.State.ModuleSandbox)
+local ModuleSandbox = require(ReplicatedStorage.Packages.AvantRuntime.State.ModuleSandbox)
 
 return function()
     describe("A ModuleSandbox", function()
@@ -88,7 +88,7 @@ return function()
                 loadstring("return true")
             end)
             if not Worked then
-                SKIP("loadstring not available.")
+                SKIP()
                 return
             end
 

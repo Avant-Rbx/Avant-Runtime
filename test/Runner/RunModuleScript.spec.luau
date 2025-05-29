@@ -3,8 +3,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Test = require(ReplicatedStorage.AvantRuntime.State.Test.Test)
-local RunModuleScript = require(ReplicatedStorage.AvantRuntime.Runner.RunModuleScript)
+local Test = require(ReplicatedStorage.Packages.AvantRuntime.State.Test.Test)
+local RunModuleScript = require(ReplicatedStorage.Packages.AvantRuntime.Runner.RunModuleScript)
 
 return function()
     describe("The RunModuleScript function", function()

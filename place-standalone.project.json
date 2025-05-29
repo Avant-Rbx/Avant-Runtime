@@ -5,9 +5,9 @@
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "Packages": {
-                "$path": "./Packages",
+                "$className": "Folder",
                 "AvantRuntime": {
-                    "$path": "."
+                    "$path": "./default-standalone.project.json"
                 }
             }
         },

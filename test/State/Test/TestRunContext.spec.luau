@@ -3,8 +3,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local TestRunContext = require(ReplicatedStorage.AvantRuntime.State.Test.TestRunContext)
-local Test = require(ReplicatedStorage.AvantRuntime.State.Test.Test)
+local TestRunContext = require(ReplicatedStorage.Packages.AvantRuntime.State.Test.TestRunContext)
+local Test = require(ReplicatedStorage.Packages.AvantRuntime.State.Test.Test)
 
 return function()
     describe("A TestRunContext", function()
