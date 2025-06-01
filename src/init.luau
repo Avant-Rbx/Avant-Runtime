@@ -26,4 +26,4 @@ return {
     FormatLines = FormatLines,
     RunModuleScript = RunModuleScript,
     RunTests = RunTests,
-} :: {}
+}
