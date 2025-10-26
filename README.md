@@ -36,6 +36,23 @@ local RunTests = require(game:GetService("TestService").AvantRuntime.RunTests) -
 local Results = RunTests() --Returns a table with the total NOT_RUN, PASSED, FAILED, and SKIPPED tests.
 ```
 
+## Ignoring Tests
+Tests can be ignored by runners, such as tests bundled with Wally packages.
+For example, if you have tests like the following:
+```
+ReplicatedStorage
+> Packages
+>  SomePackage1
+>  SomePackage2
+> SomeFolder
+```
+
+To ignore tests in `ReplicatedStorage.Packages`, a `StringValue` named
+`AvantIgnoredPaths` can be stored in any location with a JSON list of
+string paths, such as `{"ReplicatedStorage.Packages"}`. This uses `string.find`,
+so patterns are accepted. `{"Packages"}` would also work, but might filter
+out unintended paths.
+
 ## License
 Avant Runtime is available under the terms of the MIT License. See
 [LICENSE](LICENSE) for details.

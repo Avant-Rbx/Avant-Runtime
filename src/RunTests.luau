@@ -12,6 +12,7 @@ local MESSAGE_TYPE_TO_NAME = {
 local RunModuleScript = require(script.Parent:WaitForChild("Runner"):WaitForChild("RunModuleScript"))
 local Test = require(script.Parent:WaitForChild("State"):WaitForChild("Test"):WaitForChild("Test"))
 local MdouleScriptDiscovery = require(script.Parent:WaitForChild("State"):WaitForChild("Discovery"):WaitForChild("ModuleScriptDiscovery"))
+local AvantConfiguration = require(script.Parent:WaitForChild("State"):WaitForChild("AvantConfiguration"))
 local FormatLines = require(script.Parent:WaitForChild("Util"):WaitForChild("FormatLines"))
 
 
@@ -65,9 +66,11 @@ return function()
     }
 
     --Discover the ModuleScript tests.
+    local Configuration = AvantConfiguration.GetInstance()
     local ModuleScriptDiscoveryInstance = MdouleScriptDiscovery.new(game)
     local ModuleScriptTests = {}
     for _, ChildTest in ModuleScriptDiscoveryInstance.RootTest.ChildTests do
+        if ChildTest.ModuleScript and Configuration:IsIgnored(ChildTest.ModuleScript:GetFullName()) then continue end
         table.insert(ModuleScriptTests, ChildTest)
     end
     table.sort(ModuleScriptTests, function(a, b) return a.Name < b.Name end)
