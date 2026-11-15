@@ -15,7 +15,12 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
     --[[
     Adds a child TestEZ node.
     --]]
-    local function AddChildNode(Phrase: string, Callback: (...any) -> (), NodeType: string, NodeModifier: string): (any, Test.Test)
+    local function AddChildNode(Phrase: string, Callback: (...any) -> (), NodeType: string, NodeModifier: string): (any?, Test.Test?)
+        --Ignore adding the child node if the test node is skipped.
+        if TestNode.modifier == TestEZ.TestEnum.NodeModifier.Skip then
+            return nil, nil
+        end
+
         --Get the test.
         local NewTest = CurrentTestRunContext:GetTest(Phrase)
         if NodeModifier == TestEZ.TestEnum.NodeModifier.Skip then
@@ -25,6 +30,11 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
         --Create the child node.
         local NewNode = TestNode:addChild(Phrase, NodeType, NodeModifier)
         NewNode.callback = function(...)
+            --Ignore the node if it is skipped.
+            if NewNode.modifier == TestEZ.TestEnum.NodeModifier.Skip then
+                return
+            end
+
             --Run the test.
             RunTestEZTest(NewTest, Callback, NewNode, ModuleSandbox.new(Sandbox), ...)
 
@@ -34,7 +44,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
             end
         end
 
-        --Expand and return the node.
+        --Expand if the node isn't skipped and return the node.
         if NodeType == TestEZ.TestEnum.NodeType.Describe then
             NewNode:expand()
         end
@@ -86,6 +96,7 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
     end
     function Environment.itFIXME(phrase: string, callback: (...any) -> ())
         local ChildNode, ChildTest = AddChildNode(phrase, callback, TestEZ.TestEnum.NodeType.It, TestEZ.TestEnum.NodeModifier.Skip)
+        if not ChildNode or not ChildTest then return end
         ChildTest:AddOutput(Enum.MessageType.MessageWarning, `FIXME: broken test {ChildNode:getFullName()}`)
     end
 
@@ -132,11 +143,19 @@ RunTestEZTest = function(TestInstance: Test.Test, RunTest: (...any) -> (), TestN
 end
 
 return function(TestInstance: Test.Test, RunTest: () -> (), Sandbox: ModuleSandbox.ModuleSandbox): ()
+    --Create the node.
     local TestPlan = TestEZ.TestPlan.new()
     local TestNode = TestPlan:addChild(TestInstance.Name, TestEZ.TestEnum.NodeType.Describe)
     TestNode.callback = function(...)
         RunTestEZTest(TestInstance, RunTest, TestNode, Sandbox, ...)
     end
     TestNode:expand()
+
+    --Mark the test as skipped if it was skipped.
+    if TestNode.modifier == TestEZ.TestEnum.NodeModifier.Skip then
+        TestInstance:SetState("SKIPPED")
+    end
+
+    --Run the test.
     TestEZ.TestRunner.runPlan(TestPlan)
 end
