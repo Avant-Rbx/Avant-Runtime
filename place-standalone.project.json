@@ -15,6 +15,12 @@
             "$className": "TestService",
             "AvantRuntime": {
                 "$path": "./test"
+            },
+            "AvantIgnoredPaths": {
+                "$className": "StringValue",
+                "$properties": {
+                    "Value": "[\"ReplicatedStorage.Packages\",\"StarterPlayer.StarterPlayerScripts.PlayerModule\"]"
+                }
             }
         }
     }
